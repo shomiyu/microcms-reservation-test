@@ -18,20 +18,9 @@ const currentMonth: number = today.getMonth(); // 0 (1月) - 11 (12月)
 
 // 月名の配列
 const weeks = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const monthNames: string[] = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "11",
-  "12",
-];
+const monthNames: string[] = Array.from({ length: 12 }, (_, i) =>
+  String(i + 1),
+);
 
 // JSONデータから該当する日付と時間をマッピングする関数
 function getTimesForDay(day: number): entryTime[] | undefined {
