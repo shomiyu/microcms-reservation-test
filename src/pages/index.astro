@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { formatInTimeZone } from "date-fns-tz";
 
 import { getReservation, type EntryTime } from "@/types/microcmsReservation";
 const reservationRes = await getReservation();
@@ -10,11 +11,13 @@ interface CalendarDay {
 }
 
 // 現在日付を設定
-const japanOffset = 9 * 60 * 60 * 1000;
-const utcDate = new Date(reservationRes.entryMonth);
-const today: Date = new Date(utcDate.getTime() + japanOffset);
-const currentYear: number = today.getFullYear();
-const currentMonth: number = today.getMonth(); // 0 (1月) - 11 (12月)
+const jstDate = formatInTimeZone(
+  new Date(reservationRes.entryMonth),
+  "Asia/Tokyo",
+  "yyyy-MM-dd",
+);
+const currentYear: number = parseInt(jstDate.split("-")[0]);
+const currentMonth: number = parseInt(jstDate.split("-")[1]) - 1;
 
 // 月名の配列
 const weeks = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -24,12 +27,20 @@ const monthNames: string[] = Array.from({ length: 12 }, (_, i) =>
 
 // JSONデータから該当する日付と時間をマッピングする関数
 function getTimesForDay(day: number): EntryTime[] | undefined {
-  const targetDate = new Date(currentYear, currentMonth, day)
-    .toISOString()
-    .split("T")[0];
-  const match = reservationRes.entryDates.find((d) =>
-    d.entryDate?.startsWith(targetDate),
-  );
+  const date = new Date(currentYear, currentMonth, day);
+  const targetDate = formatInTimeZone(date, "Asia/Tokyo", "yyyy-MM-dd");
+
+  // entryDateをJSTに変換して比較
+  const match = reservationRes.entryDates.find((d) => {
+    if (!d.entryDate) return false;
+    const entryDateJST = formatInTimeZone(
+      new Date(d.entryDate),
+      "Asia/Tokyo",
+      "yyyy-MM-dd",
+    );
+    return entryDateJST === targetDate;
+  });
+
   return match?.entryTimes;
 }
 
