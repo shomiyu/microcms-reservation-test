@@ -56,9 +56,12 @@ function generateCalendar(): CalendarDay[] {
 const calendar = generateCalendar();
 ---
 
-<Layout isTopPage={true}>
+<Layout
+  isTopPage={true}
+  title={`${currentYear}年${monthNames[currentMonth]}月の予約受付`}
+>
   <main>
-    <h2>{currentYear}年{monthNames[currentMonth]}月</h2>
+    <h1 class="pageTitle">{currentYear}年{monthNames[currentMonth]}月</h1>
     <table class="calendar">
       <thead>
         <tr class="calendar-header">
@@ -71,15 +74,20 @@ const calendar = generateCalendar();
             <tr>
               {calendar.slice(i * 7, (i + 1) * 7).map((day) => (
                 <td class={`day ${day.day ? "" : "empty"}`}>
-                  {day.day && (
-                    <>
-                      <div>{day.day}</div>
-                      {day.times &&
-                        day.times.map((time) => (
-                          <a href="#">{time.entryTime}</a>
-                        ))}
-                    </>
-                  )}
+                  {day.day && <div class="date-number">{day.day}</div>}
+                  {day.times &&
+                    day.times.map((time) => {
+                      const dateParam = `${monthNames[currentMonth]}月${day.day}日 ${time.entryTime}`;
+
+                      return (
+                        <form action="/contact" method="get">
+                          <input type="hidden" name="date" value={dateParam} />
+                          <button type="submit" class="time-link">
+                            {time.entryTime}
+                          </button>
+                        </form>
+                      );
+                    })}
                 </td>
               ))}
             </tr>
@@ -90,11 +98,12 @@ const calendar = generateCalendar();
   </main>
 </Layout>
 
-<style>
+<style lang="scss">
   main {
     padding-block: 64px;
+    padding-inline: 16px;
   }
-  h2 {
+  .pageTitle {
     text-align: center;
     margin-bottom: 24px;
   }
@@ -108,10 +117,14 @@ const calendar = generateCalendar();
   .calendar-header {
     font-size: 14px;
     background-color: #fafafa;
+
+    th {
+      padding: 10px;
+      border: 1px solid #ddd;
+    }
   }
-  .calendar-header th {
-    padding: 10px;
-    border: 1px solid #ddd;
+  .date-number {
+    margin-bottom: 8px;
   }
   .day {
     font-weight: bold;
@@ -132,18 +145,23 @@ const calendar = generateCalendar();
   td:nth-child(7n) {
     color: #0000ff;
   }
-  a {
+  .time-link {
     color: #000;
-    display: block;
     font-weight: normal;
     text-decoration: none;
-    padding: 4px;
+    background: none;
     border: 1px solid #ddd;
     border-radius: 2px;
-    margin-top: 5px;
-  }
-  a:hover {
-    border-color: #ff0000;
-    background-color: #fff0f5;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px;
+    display: block;
+    width: 100%;
+    text-align: center;
+    margin-top: 4px;
+    &:hover {
+      border-color: #ff0000;
+      background-color: #fff0f5;
+    }
   }
 </style>

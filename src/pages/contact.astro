@@ -1,0 +1,162 @@
+---
+import Layout from "@/layouts/Layout.astro";
+---
+
+<Layout title="予約フォーム">
+  <main>
+    <h1 class="pageTitle">予約フォーム</h1>
+
+    <noscript>
+      <div class="noscript-warning">
+        ※JavaScriptを有効にしてください。予約日時の自動入力機能が利用できません。
+      </div>
+    </noscript>
+
+    <form action="#!" method="POST" class="contactForm">
+      <dl class="contactForm__parts">
+        <dt class="contactForm__label required">
+          <label for="yourName">お名前</label>
+        </dt>
+        <dd class="contactForm__entry">
+          <input
+            id="yourName"
+            type="text"
+            name="お名前"
+            placeholder="山田太郎"
+            required
+          />
+        </dd>
+      </dl>
+      <dl class="contactForm__parts">
+        <dt class="contactForm__label required">
+          <label for="yourMail">メールアドレス</label>
+        </dt>
+        <dd class="contactForm__entry">
+          <input
+            id="yourMail"
+            type="email"
+            name="メールアドレス"
+            placeholder="info@test.com"
+            required
+          />
+        </dd>
+      </dl>
+      <dl class="contactForm__parts">
+        <dt class="contactForm__label required">
+          <label for="yourTel">電話番号</label>
+        </dt>
+        <dd class="contactForm__entry">
+          <input
+            id="yourTel"
+            type="tel"
+            name="電話番号"
+            placeholder="09012341234"
+            required
+          />
+        </dd>
+      </dl>
+      <dl class="contactForm__parts">
+        <dt class="contactForm__label">
+          <label for="date">予約希望日</label>
+        </dt>
+        <dd class="contactForm__entry">
+          <input
+            id="date"
+            type="text"
+            name="ご希望日"
+            placeholder="◯月◯日 10:00-14:00"
+          />
+        </dd>
+      </dl>
+      <button type="submit" class="button">送信する</button>
+    </form>
+  </main>
+</Layout>
+
+<script>
+  // ページ読み込み時にURLパラメータを取得して入力欄に設定
+  document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const date = params.get("date");
+    if (date) {
+      const decodedDate = decodeURIComponent(date);
+      const dateInput = document.getElementById("date") as HTMLInputElement;
+      if (dateInput) {
+        dateInput.value = decodedDate;
+      }
+    }
+  });
+</script>
+
+<style lang="scss">
+  main {
+    padding-block: 64px;
+    padding-inline: 16px;
+  }
+  .pageTitle {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .noscript-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    padding: 12px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+  }
+  .contactForm {
+    margin-top: 40px;
+    max-width: 600px;
+    margin: auto;
+    &__parts {
+      margin-bottom: 24px;
+    }
+
+    &__label {
+      font-size: 16px;
+      margin-bottom: 8px;
+      small {
+        font-size: 14px;
+      }
+      &.required {
+        &::after {
+          content: "*";
+          color: red;
+          margin-left: 4px;
+        }
+      }
+    }
+    &__entry {
+      input {
+        font-size: 100%;
+        line-height: 40px;
+        width: 100%;
+        background-color: #fafafa;
+        padding: 4px 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+
+        &::placeholder {
+          color: #bbb;
+        }
+      }
+    }
+  }
+  .button {
+    display: block;
+    line-height: 48px;
+    width: 100%;
+    max-width: 320px;
+    margin: 64px auto 0;
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+</style>
