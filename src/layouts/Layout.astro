@@ -1,0 +1,33 @@
+---
+import "ress";
+import "@fontsource-variable/noto-sans-jp";
+import "@/styles/global/base.scss";
+import "@/styles/utility/visually-hidden.scss";
+import "@/styles/utility/margin.scss";
+import "@/styles/utility/font-size.scss";
+import "@/styles/utility/align.scss";
+import "@/styles/utility/display.scss";
+interface Props {
+  isTopPage?: boolean;
+  title?: string;
+}
+
+const { isTopPage, title } = Astro.props;
+const siteName = "";
+const pageTitle = isTopPage ? siteName : title + " | " + siteName;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content="Astro description" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

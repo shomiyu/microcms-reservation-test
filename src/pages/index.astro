@@ -1,0 +1,133 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+import { getReservation, type entryTime } from "@/types/microcmsReservation";
+const reservationRes = await getReservation();
+
+interface CalendarDay {
+  day: number | null; // 日付 (nullなら空白)
+  times?: entryTime[]; // 該当する時間のデータ
+}
+
+// 現在日付を設定
+const japanOffset = 9 * 60 * 60 * 1000;
+const utcDate = new Date(reservationRes.entryMonth);
+const today: Date = new Date(utcDate.getTime() + japanOffset);
+const currentYear: number = today.getFullYear();
+const currentMonth: number = today.getMonth(); // 0 (1月) - 11 (12月)
+
+// 月名の配列
+const monthNames: string[] = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "11",
+  "12",
+];
+
+// JSONデータから該当する日付と時間をマッピングする関数
+function getTimesForDay(day: number): entryTime[] | undefined {
+  const targetDate = new Date(currentYear, currentMonth, day)
+    .toISOString()
+    .split("T")[0];
+  const match = reservationRes.entryDates.find((d) =>
+    d.entryDate?.startsWith(targetDate),
+  );
+  return match?.entryTimes;
+}
+
+// 当月のカレンダーを生成する関数
+function generateCalendar(): CalendarDay[] {
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // 月の初日の曜日
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate(); // 月の日数
+  const calendar: CalendarDay[] = [];
+
+  // 空白部分 (先頭を埋める)
+  for (let i = 0; i < firstDay; i++) {
+    calendar.push({ day: null });
+  }
+
+  // 日付部分
+  for (let day = 1; day <= daysInMonth; day++) {
+    const times = getTimesForDay(day);
+    calendar.push({ day, times });
+  }
+
+  return calendar;
+}
+
+const calendar = generateCalendar();
+---
+
+<Layout isTopPage={true}>
+  <main>
+    <!-- 現在の月と年 -->
+    <h2>{currentYear}年{monthNames[currentMonth]}月</h2>
+
+    <!-- カレンダー表示 -->
+    <div class="calendar">
+      <!-- 曜日のヘッダー -->
+      <div class="calendar-day"><strong>Sun</strong></div>
+      <div class="calendar-day"><strong>Mon</strong></div>
+      <div class="calendar-day"><strong>Tue</strong></div>
+      <div class="calendar-day"><strong>Wed</strong></div>
+      <div class="calendar-day"><strong>Thu</strong></div>
+      <div class="calendar-day"><strong>Fri</strong></div>
+      <div class="calendar-day"><strong>Sat</strong></div>
+
+      <!-- 日付の描画 -->
+      {
+        calendar.map((day) => (
+          <div class={`calendar-day ${day.day ? "" : "empty"}`}>
+            {day.day && (
+              <>
+                <div>{day.day}</div>
+                {day.times &&
+                  day.times.map((time) => <a href="#">{time.entryTime}</a>)}
+              </>
+            )}
+          </div>
+        ))
+      }
+    </div>
+  </main>
+</Layout>
+
+<style lang="scss">
+  .calendar {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+    margin: auto;
+  }
+  .calendar-day {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  .empty {
+    background-color: transparent;
+    border: none;
+  }
+  a {
+    display: block;
+    color: #007acc;
+    text-decoration: none;
+    margin-top: 5px;
+  }
+  h2 {
+    text-align: center;
+  }
+</style>
