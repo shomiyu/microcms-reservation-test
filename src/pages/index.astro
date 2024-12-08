@@ -1,12 +1,12 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 
-import { getReservation, type entryTime } from "@/types/microcmsReservation";
+import { getReservation, type EntryTime } from "@/types/microcmsReservation";
 const reservationRes = await getReservation();
 
 interface CalendarDay {
   day: number | null; // 日付 (nullなら空白)
-  times?: entryTime[]; // 該当する時間のデータ
+  times?: EntryTime[]; // 該当する時間のデータ
 }
 
 // 現在日付を設定
@@ -23,7 +23,7 @@ const monthNames: string[] = Array.from({ length: 12 }, (_, i) =>
 );
 
 // JSONデータから該当する日付と時間をマッピングする関数
-function getTimesForDay(day: number): entryTime[] | undefined {
+function getTimesForDay(day: number): EntryTime[] | undefined {
   const targetDate = new Date(currentYear, currentMonth, day)
     .toISOString()
     .split("T")[0];

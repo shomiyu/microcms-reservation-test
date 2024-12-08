@@ -11,16 +11,16 @@ export interface Reservation {
   publishedAt: string;
   revisedAt: string;
   entryMonth: string;
-  entryDates: entryDate[];
+  entryDates: EntryDate[];
 }
 
-export interface entryDate {
+export interface EntryDate {
   fieldId: string;
   entryDate: string | null;
-  entryTimes: entryTime[];
+  entryTimes: EntryTime[];
 }
 
-export interface entryTime {
+export interface EntryTime {
   fieldId: string;
   entryTime: string;
 }
