@@ -1,13 +1,12 @@
 # microcms-reservation-test with Astro
 
-▼ デモ
+▼ デモ  
 [microCMSで予約フォームを作ろう](https://microcms-reservation.netlify.app/)
 
-▼詳細
+▼ 詳細  
 [microCMSでカレンダー型予約フォームを作りました【Astro.js】](https://zenn.dev/shomiyu/articles/31191724b5e242)
 
 ▼ 機能
-
 - Astro.js
 - microCMS
 - Reset CSS (ress)
@@ -39,7 +38,8 @@ MICROCMS_API_KEY=<YOUR_KEY_VALUE>
 
 ### microCMS APIスキーマ設定
 
-microCMSのお知らせAPIスキーマは以下を想定。同じように設定すれば立ち上がる。
+microCMSのお知らせAPIスキーマは以下を想定。同じように設定すれば立ち上がる。  
+リポジトリ内の`api-calendar-20241208215143.json`をインポートしてもOK。
 
 #### カスタムフィールド
 
