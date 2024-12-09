@@ -1,5 +1,14 @@
-# Astro Boilerplate
+# microcms-reservation-test with Astro
 
+▼ デモ
+[microCMSで予約フォームを作ろう](https://microcms-reservation.netlify.app/)
+
+▼詳細
+[microCMSでカレンダー型予約フォームを作りました【Astro.js】](https://zenn.dev/shomiyu/articles/31191724b5e242)
+
+▼ 機能
+
+- Astro.js
 - microCMS
 - Reset CSS (ress)
 - Sass
@@ -17,8 +26,7 @@ $ npm install
 
 ## 📚 microCMS との接続
 
-`.env`の設定とmicroCMS側のスキーマ設定が必要。  
-デフォルトでお知らせが取得できるように設定しており、それが不要な場合は`/src/pages/index.astro`で`res`の部分を削除すると`.env`の設定のみで立ち上がる。
+`.env`の設定とmicroCMS側のスキーマ設定が必要。
 
 ### .env設定
 
@@ -29,86 +37,32 @@ MICROCMS_SERVICE_DOMAIN=<YOUR_SERVICE>
 MICROCMS_API_KEY=<YOUR_KEY_VALUE>
 ```
 
-### microCMS APIスキーマ設定（News）
+### microCMS APIスキーマ設定
 
 microCMSのお知らせAPIスキーマは以下を想定。同じように設定すれば立ち上がる。
 
-endpoint: news  
-type: リスト形式
+#### カスタムフィールド
 
-| フィールド ID    | 表示名                                 | 種類           |
-| :------------ | :------------------------------------ | :------------ |
-| title         | タイトル                                | テキストフィールド |
-| date          | 更新日・公開日 (任意の日付を選びたい場合のみ) | 日付           |
-| category      | カテゴリー                              | セレクトフィールド  |
-| contents      | 本文                                  | リッチエディタ    |
+endpoint: reservation
+| フィールド ID | 表示名 | 種類 |
+| :------------ | :-------------------------------------------- | :----------------- |
+| entryTime | 時間 | テキストフィールド |
 
-## 🍡 Fonts Install
+endpoint: entryDate
+| フィールド ID | 表示名 | 種類 |
+| :------------ | :-------------------------------------------- | :----------------- |
+| entryDate | 受付日 | 日時 |
+| entryTimes | 受付時間 | 繰り返し - entryTime |
 
-フォントのインストールは [Fontsource](https://fontsource.org/)から npm でインストールして使用する。
+#### APIスキーマ
 
-フォントをインストール
+endpoint: reservation
+type: オブジェクト形式
 
-```bash
-# Noto Sans JP
-$ npm install @fontsource-variable/noto-sans-jp
-
-# Noto Serif JP
-$ npm install @fontsource/noto-serif-jp
-```
-
-Layout ファイルで import
-
-```jsx
-// Supports weights 100-900
-import "@fontsource-variable/noto-sans-jp";
-```
-
-CSS で読み込み
-
-```css
-body {
-  font-family: "Noto Sans JP Variable", sans-serif;
-}
-```
-
-## ⏰ how to use 'date-fns-tz'
-
-### import
-
-```js
-import { formatInTimeZone } from "date-fns-tz";
-```
-
-### use in Tag
-
-```jsx
-<time
-  datetime={formatInTimeZone(
-    new Date(DATE),
-    "Asia/Tokyo",
-    "yyyy-MM-dd HH:mm:ssXXX",
-  )}
->
-  {formatInTimeZone(new Date(DATE), "Asia/Tokyo", "yyyy.MM.dd")}
-</time>
-```
-
-## 🍖 Files
-
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+| フィールド ID | 表示名     | 種類                 |
+| :------------ | :--------- | :------------------- |
+| entryMonth    | 受付月     | 日時                 |
+| entryDates    | 受付日一覧 | 繰り返し - entryDate |
 
 ## 🧞 Commands
 
