@@ -11,11 +11,10 @@ interface CalendarDay {
 }
 
 // 現在日付を設定
-const jstDate = formatInTimeZone(
-  new Date(reservationRes.entryMonth),
-  "Asia/Tokyo",
-  "yyyy-MM-dd",
-);
+const entryDate = reservationRes.entryMonth
+  ? new Date(reservationRes.entryMonth)
+  : new Date();
+const jstDate = formatInTimeZone(entryDate, "Asia/Tokyo", "yyyy-MM-dd");
 const currentYear: number = parseInt(jstDate.split("-")[0]);
 const currentMonth: number = parseInt(jstDate.split("-")[1]) - 1;
 
